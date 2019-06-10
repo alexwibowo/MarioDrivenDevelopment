@@ -1,0 +1,58 @@
+<idea-plugin>
+  <id>com.wibowo.intellij.mdd</id>
+  <name>Mario Driven Development</name>
+  <version>1.0</version>
+  <vendor email="alexwibowo@gmail.com" url="http://www.alexwibowo.com">Alex Wibowo</vendor>
+
+  <description><![CDATA[
+      <em>Mama mia!</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      <em>Initial release</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <group id="MDD.Menu" text="Mario Driven Development" popup="true">
+      <add-to-group anchor="last" group-id="ToolsMenu"/>
+      <action class="com.wibowo.intellij.mdd.ToggleActionSounds"
+              id="MDD.ToggleActionSounds" text="Sounds on Actions">
+        <keyboard-shortcut keymap="$default" first-keystroke="alt shift m"/>
+      </action>
+      <action class="com.wibowo.intellij.mdd.ToggleBackgroundMusic"
+              id="MDD.StartStop" text="Background Music"/>
+    </group>
+  </actions>
+
+
+  <application-components>
+    <component>
+      <implementation-class>com.wibowo.intellij.mdd.MarioProgressBarComponent</implementation-class>
+    </component>
+    <component>
+      <implementation-class>com.wibowo.intellij.mdd.MarioProjectListenerComponent</implementation-class>
+    </component>
+  </application-components>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="com.wibowo.intellij.mdd.Settings" serviceImplementation="com.wibowo.intellij.mdd.Settings"/>
+    <checkinHandlerFactory implementation="com.wibowo.intellij.mdd.events.CheckinHandlerFactory"/>
+    <postStartupActivity implementation="com.wibowo.intellij.mdd.MarioProjectListenerComponent"/>
+  </extensions>
+
+
+</idea-plugin>
