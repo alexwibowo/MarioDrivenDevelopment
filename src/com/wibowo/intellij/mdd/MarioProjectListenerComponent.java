@@ -1,10 +1,11 @@
 package com.wibowo.intellij.mdd;
 
+import com.intellij.openapi.application.ApplicationListener;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.startup.StartupActivity;
 import com.wibowo.intellij.mdd.events.SoundPlayingListener;
 import com.wibowo.intellij.mdd.events.TestEvent;
 import com.wibowo.intellij.mdd.events.VcsEvent;
@@ -14,23 +15,30 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MarioProjectListenerComponent implements StartupActivity {
+public class MarioProjectListenerComponent implements BaseComponent {
 
     private final Map<Project, VcsEvent> vcsEventByProject = new HashMap<>();
     private final Map<Project, TestEvent> testEventByProject = new HashMap<>();
 
     private SoundPlayingListener soundPlayingListener;
     private ProjectManagerListener projectManagerListener;
+    private ApplicationListener applicationListener;
 
-    public MarioProjectListenerComponent() {
+    @Override
+    public void initComponent() {
         init();
     }
 
-    public void init() {
-        soundPlayingListener = new SoundPlayingListener(createSounds()).init();
-        initProjectListeners();
+    @Override
+    public void disposeComponent() {
+        dispose(true);
     }
 
+    private void init() {
+        soundPlayingListener = new SoundPlayingListener(createSounds()).init();
+        initApplicationListeners();
+        initProjectListeners();
+    }
 
     public void setBackgroundMusicEnabled(boolean value) {
         Settings.getInstance().setBackgroundMusicEnabled(value);
@@ -42,12 +50,13 @@ public class MarioProjectListenerComponent implements StartupActivity {
         update();
     }
 
-    public void dispose(boolean isIdeShutdown) {
+    private void dispose(final boolean isIdeShutdown) {
         if (soundPlayingListener == null){
             return;
         }
 
         disposeProjectListeners();
+        disposeApplicationListeners();
         soundPlayingListener.stop(isIdeShutdown);
         soundPlayingListener = null;
     }
@@ -101,22 +110,42 @@ public class MarioProjectListenerComponent implements StartupActivity {
                 }
             }
         };
+        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+            projectManagerListener.projectOpened(project);
+        }
+        ProjectManager.getInstance().addProjectManagerListener(projectManagerListener);
+    }
+
+    private void initApplicationListeners() {
+        applicationListener = new ApplicationListener() {
+            @Override
+            public void applicationExiting() {
+                soundPlayingListener.stopAndWait();
+
+            }
+        };
+        ApplicationManager.getApplication().addApplicationListener(applicationListener);
     }
 
     private void disposeProjectListeners() {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             projectManagerListener.projectClosed(project);
-            ProjectManager.getInstance().removeProjectManagerListener(project, projectManagerListener);
         }
+        ProjectManager.getInstance().removeProjectManagerListener(projectManagerListener);
+
+    }
+
+    private void disposeApplicationListeners() {
+        ApplicationManager.getApplication().removeApplicationListener(applicationListener);
     }
 
     static MarioProjectListenerComponent instance() {
         return ApplicationManager.getApplication().getComponent(MarioProjectListenerComponent.class);
     }
 
-    @Override
-    public void runActivity(@NotNull Project project) {
-        ProjectManager.getInstance().addProjectManagerListener(project, projectManagerListener);
-        projectManagerListener.projectOpened(project);
+    @SuppressWarnings("ConstantConditions")
+    @NotNull @Override public String getComponentName() {
+        return this.getClass().getCanonicalName();
     }
+
 }

@@ -33,6 +33,16 @@ public class SoundPlayingListener implements VcsEvent.Listener, TestEvent.Listen
         }
     }
 
+    public void stopAndWait() {
+        if (stopped){
+            return;
+        }
+        stopped = true;
+        sounds.marioSong.stop();
+        sounds.zeldaSong.stop();
+        sounds.gameover.playAndWait();
+    }
+
     @Override
     public void onVcsCommit() {
         sounds.powerupAppears.play();

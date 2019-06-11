@@ -1,7 +1,6 @@
 package com.wibowo.intellij.mdd;
 
 import com.intellij.openapi.ui.GraphicsConfig;
-import com.intellij.openapi.util.ScalableIcon;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.GraphicsUtil;
@@ -19,11 +18,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Random;
 
+/**
+ * Display Mario on progress bar
+ */
 public class MarioProgressBarUI extends BasicProgressBarUI {
     private static final float ONE_OVER_SEVEN = 1f / 7;
     private static final Color VIOLET = new Color(90, 0, 157);
 
+    private Random random = new Random();
 
     @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
     public static ComponentUI createUI(JComponent c) {
@@ -144,8 +148,16 @@ public class MarioProgressBarUI extends BasicProgressBarUI {
 
 //        g.setPaint(baseRainbowPaint);
 
-        Icon scaledIcon = velocity > 0 ? ((ScalableIcon) MarioIcons.MARIO_ICON) : ((ScalableIcon) MarioIcons.RMARIO_ICON) ;
-//        if (velocity < 0) {
+//        Icon scaledIcon = velocity > 0 ? ((ScalableIcon) MarioIcons.MARIO_ICON) : ((ScalableIcon) MarioIcons.RMARIO_ICON) ;
+        Icon scaledIcon;
+        boolean shouldRun = random.nextInt() % 2 == 0;
+        if (velocity > 0) {
+            scaledIcon = shouldRun ? MarioIcons.MARIO_RUNNING_FROM_LEFT : MarioIcons.MARIO_STANDING_FROM_LEFT;
+        } else {
+            scaledIcon = shouldRun ? MarioIcons.MARIO_RUNNING_FROM_RIGHT : MarioIcons.MARIO_STANDING_FROM_RIGHT;
+        }
+
+        //        if (velocity < 0) {
 //            scaledIcon = new ReflectedIcon(scaledIcon);
 //        }
         scaledIcon.paintIcon(progressBar, g, offset2 - JBUI.scale(10), -JBUI.scale(6));
@@ -213,9 +225,11 @@ public class MarioProgressBarUI extends BasicProgressBarUI {
                 new Color[]{Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.GREEN}));
 
 
-
-
-        MarioIcons.MARIO_ICON.paintIcon(progressBar, g2, amountFull - JBUI.scale(10), -JBUI.scale(6));
+        if (random.nextInt() % 2 == 0 ) {
+            MarioIcons.MARIO_STANDING_FROM_LEFT.paintIcon(progressBar, g2, amountFull - JBUI.scale(10), -JBUI.scale(6));
+        } else {
+            MarioIcons.MARIO_RUNNING_FROM_LEFT.paintIcon(progressBar, g2, amountFull - JBUI.scale(10), -JBUI.scale(6));
+        }
         g2.fill(new RoundRectangle2D.Float(2f*off,2f*off, amountFull - JBUI.scale(5f), h - JBUI.scale(5f), JBUI.scale(7f), JBUI.scale(7f)));
         g2.translate(0, -(c.getHeight() - h)/2);
 

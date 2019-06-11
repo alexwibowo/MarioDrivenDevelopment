@@ -44,4 +44,8 @@ public class Settings implements PersistentStateComponent<Settings> {
         }
 
     }
+
+    public boolean isPluginEnabled() {
+        return actionSoundsEnabled || backgroundMusicEnabled;
+    }
 }

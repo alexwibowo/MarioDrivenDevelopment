@@ -2,14 +2,15 @@
   <id>com.wibowo.intellij.mdd</id>
   <name>Mario Driven Development</name>
   <version>1.0</version>
-  <vendor email="alexwibowo@gmail.com" url="http://www.alexwibowo.com">Alex Wibowo</vendor>
+  <vendor email="alexwibowo@gmail.com" url="http://github.com/alexwibowo">Alex Wibowo</vendor>
 
   <description><![CDATA[
       <em>Mama mia!</em>
+      <em>Heavily inspired by Nyan Progress Bar plugin (https://plugins.jetbrains.com/plugin/8575-nyan-progress-bar) and Friday Mario plugin (https://plugins.jetbrains.com/plugin/7599-fridaymario). In fact, 99% of the code are copied from these two plugins</em>
     ]]></description>
 
   <change-notes><![CDATA[
-      <em>Initial release</em>
+      <em>Initial release of MDD!</em>
     ]]>
   </change-notes>
 
@@ -51,7 +52,6 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="com.wibowo.intellij.mdd.Settings" serviceImplementation="com.wibowo.intellij.mdd.Settings"/>
     <checkinHandlerFactory implementation="com.wibowo.intellij.mdd.events.CheckinHandlerFactory"/>
-    <postStartupActivity implementation="com.wibowo.intellij.mdd.MarioProjectListenerComponent"/>
   </extensions>
 
 
