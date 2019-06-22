@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.wibowo.intellij.mdd</id>
   <name>Mario Driven Development</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="alexwibowo@gmail.com" url="http://github.com/alexwibowo">Alex Wibowo</vendor>
 
   <description><![CDATA[
@@ -10,7 +10,8 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      <em>Initial release of MDD!</em>
+      <em>1.1: Fixing some compatibility issue with older version of Intellij platform.</em>
+      <em>1.0: Initial release of MDD!</em>
     ]]>
   </change-notes>
 

@@ -123,6 +123,32 @@ public class MarioProjectListenerComponent implements BaseComponent {
                 soundPlayingListener.stopAndWait();
 
             }
+
+            @Override
+            public void afterWriteActionFinished(@NotNull Object action) {
+
+
+            }
+
+            @Override
+            public boolean canExitApplication() {
+                return true;
+            }
+
+            @Override
+            public void beforeWriteActionStart(@NotNull Object action) {
+
+            }
+
+            @Override
+            public void writeActionStarted(@NotNull Object action) {
+
+            }
+
+            @Override
+            public void writeActionFinished(@NotNull Object action) {
+
+            }
         };
         ApplicationManager.getApplication().addApplicationListener(applicationListener);
     }

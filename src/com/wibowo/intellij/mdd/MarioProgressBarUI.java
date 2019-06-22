@@ -18,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -25,7 +26,26 @@ import java.util.Random;
  */
 public class MarioProgressBarUI extends BasicProgressBarUI {
     private static final float ONE_OVER_SEVEN = 1f / 7;
-    private static final Color VIOLET = new Color(90, 0, 157);
+
+    private static final Color[] BACKGROUND_GRADIENT = new Color[]{
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            new JBColor(new Color(117, 127, 252), JBColor.BLUE),
+            JBColor.GREEN
+
+    };
+    private float[] BACKGROUND_FRACTIONS = new float[]{
+            ONE_OVER_SEVEN * 1,
+            ONE_OVER_SEVEN * 2,
+            ONE_OVER_SEVEN * 3,
+            ONE_OVER_SEVEN * 4,
+            ONE_OVER_SEVEN * 5,
+            ONE_OVER_SEVEN * 6,
+            ONE_OVER_SEVEN * 7
+    };
 
     private Random random = new Random();
 
@@ -81,11 +101,10 @@ public class MarioProgressBarUI extends BasicProgressBarUI {
         int h = c.getPreferredSize().height;
         if (!isEven(c.getHeight() - h)) h++;
 
-        LinearGradientPaint baseRainbowPaint = new LinearGradientPaint(0, JBUI.scale(2), 0, h - JBUI.scale(6),
-                new float[]{ONE_OVER_SEVEN * 1, ONE_OVER_SEVEN * 2, ONE_OVER_SEVEN * 3, ONE_OVER_SEVEN * 4, ONE_OVER_SEVEN * 5, ONE_OVER_SEVEN * 6, ONE_OVER_SEVEN * 7},
-                new Color[]{Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.GREEN});
-
-        g.setPaint(baseRainbowPaint);
+        final LinearGradientPaint linearBackground = new LinearGradientPaint(0, JBUI.scale(2), 0, h - JBUI.scale(6),
+                BACKGROUND_FRACTIONS,
+                BACKGROUND_GRADIENT);
+        g.setPaint(linearBackground);
 
         if (c.isOpaque()) {
             g.fillRect(0, (c.getHeight() - h)/2, w, h);
@@ -93,11 +112,9 @@ public class MarioProgressBarUI extends BasicProgressBarUI {
         g.setColor(new JBColor(Gray._165.withAlpha(50), Gray._88.withAlpha(50)));
         final GraphicsConfig config = GraphicsUtil.setupAAPainting(g);
         g.translate(0, (c.getHeight() - h) / 2);
-        int x = -offset;
-
 
         Paint old = g.getPaint();
-        g.setPaint(baseRainbowPaint);
+        g.setPaint(linearBackground);
 
         final float R = JBUI.scale(8f);
         final float R2 = JBUI.scale(9f);
@@ -221,8 +238,8 @@ public class MarioProgressBarUI extends BasicProgressBarUI {
         g2.setColor(background);
         g2.fill(new RoundRectangle2D.Float(off, off, w - 2f*off - off, h - 2f*off - off, R, R));
         g2.setPaint(new LinearGradientPaint(0, JBUI.scale(2), 0, h - JBUI.scale(6),
-                new float[]{ONE_OVER_SEVEN * 1, ONE_OVER_SEVEN * 2, ONE_OVER_SEVEN * 3, ONE_OVER_SEVEN * 4, ONE_OVER_SEVEN * 5, ONE_OVER_SEVEN * 6, ONE_OVER_SEVEN * 7},
-                new Color[]{Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.GREEN}));
+                BACKGROUND_FRACTIONS,
+                BACKGROUND_GRADIENT));
 
 
         if (random.nextInt() % 2 == 0 ) {
